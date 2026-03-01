@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bjj-primary: #1a365d;
+  --color-bjj-accent: #ed8936;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+  font-family: 'Noto Sans SC', system-ui, sans-serif;
+}
+
+/* 移动端底部安全区 */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* 树组件样式覆盖 */
+.rct-tree-root {
+  @apply font-sans;
+}
+
+.rct-tree-item-li {
+  @apply py-2;
+}
+
+.rct-tree-item-title-container {
+  @apply rounded-lg px-3 py-2 hover:bg-slate-100 transition-colors;
+}
