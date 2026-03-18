@@ -1,0 +1,70 @@
+<view class="container" wx:if="{{flow}}">
+  <view class="back" bindtap="onBack">
+    <view class="icon icon-chevron-left"></view>
+    <text>返回</text>
+  </view>
+
+  <view class="card header-card">
+    <view class="header-row flex-between">
+      <view class="flow-name">{{flow.name}}</view>
+      <view class="btn-edit" bindtap="onEdit">编辑</view>
+    </view>
+    <view wx:if="{{flowStartText}}" class="flow-start">起始：{{flowStartText}}</view>
+  </view>
+
+  <view wx:if="{{treeRows.length > 0}}" class="section">
+    <view class="section-title">【流程树】</view>
+    <view class="tree-view">
+      <view wx:for="{{treeRows}}" wx:key="id" class="tree-row" style="padding-left: {{item.depth * 40}}rpx;">
+        <view wx:if="{{item.edge && item.edge.branch}}" class="branch-label">
+          <text class="tree-connector">{{item.branchPrefix}}</text>
+          <text>若 {{item.edge.branch}}</text>
+        </view>
+        <view class="node-card">
+          <text class="node-type">{{item.node.type === 'tech' ? '招式' : '步骤'}}</text>
+          <text class="node-label">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:elif="{{steps.length > 0}}" class="section">
+    <view class="section-title">【步骤】</view>
+    <view class="step-list">
+      <view wx:for="{{steps}}" wx:key="id" class="step-item">
+        <text class="step-order">{{index + 1}}.</text>
+        <text class="step-text" wx:if="{{item.state}}">
+          {{STEP_STATE_LABELS[item.state] || item.state}}{{item.position ? ' · ' + (POSITION_LABELS[item.position] || item.position) : ''}}{{item.action ? ' · ' + (ACTION_LABELS[item.action] || item.action) : ''}}
+        </text>
+        <text class="step-text" wx:else>
+          {{item.position || ''}}{{item.position && item.move ? ' → ' : ''}}{{item.move || ''}}
+        </text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{decisions.length > 0 && treeRows.length === 0}}" class="section">
+    <view class="section-title">【分支】</view>
+    <view class="decision-list">
+      <view wx:for="{{decisions}}" wx:key="id" class="decision-item">
+        <text>若 {{item.trigger}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{notes.length > 0}}" class="section">
+    <view class="section-title">【关键点】</view>
+    <view class="note-list">
+      <view wx:for="{{notes}}" wx:key="id" class="note-item">
+        <text class="note-bullet">-</text>
+        <text class="note-content">{{item.content}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{treeRows.length === 0 && steps.length === 0 && decisions.length === 0 && notes.length === 0}}" class="empty-detail">
+    <text>暂无步骤、分支或关键点</text>
+  </view>
+</view>
+
+<view wx:else class="loading">加载中...</view>

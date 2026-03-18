@@ -1,0 +1,126 @@
+<view class="container">
+  <view class="title">复盘招式</view>
+
+  <view class="filter-group">
+    <text class="filter-label">时间范围</text>
+    <view class="tags">
+      <view
+        wx:for="{{timeOptions}}"
+        wx:key="value"
+        class="btn-tag {{timeFilter === item.value ? 'btn-tag-active' : 'btn-tag-outline'}}"
+        data-val="{{item.value}}"
+        bindtap="onTimeFilter"
+      >{{item.label}}</view>
+    </view>
+  </view>
+
+  <view class="quick-filter">
+    <text class="quick-label">按动作筛选</text>
+    <text class="quick-hint">点击查看各位置的该动作</text>
+    <view class="tags">
+      <view
+        wx:for="{{ACTION_OPTIONS}}"
+        wx:key="*this"
+        class="btn-tag {{actionFilter === item && !positionFilter ? 'btn-tag-active' : 'btn-tag-outline'}}"
+        data-val="{{item}}"
+        bindtap="onQuickAction"
+      >{{ACTION_LABELS[item]}}</view>
+    </view>
+  </view>
+
+  <view class="quick-filter">
+    <text class="quick-label">按位置筛选</text>
+    <text class="quick-hint">点击查看该位置下的所有动作</text>
+    <view class="tags">
+      <view
+        wx:for="{{POSITION_OPTIONS}}"
+        wx:key="*this"
+        class="btn-tag {{positionFilter === item && !actionFilter ? 'btn-tag-active' : 'btn-tag-outline'}}"
+        data-val="{{item}}"
+        bindtap="onQuickPosition"
+      >{{POSITION_LABELS[item]}}</view>
+    </view>
+  </view>
+
+  <view class="advanced-filter" wx:if="{{actionFilter || positionFilter}}">
+    <text class="filter-label">组合筛选</text>
+    <view class="tags">
+      <view
+        class="btn-tag {{!positionFilter ? 'btn-tag-active' : 'btn-tag-outline'}}"
+        data-val=""
+        bindtap="onPositionFilter"
+      >全部位置</view>
+      <view
+        wx:for="{{POSITION_OPTIONS}}"
+        wx:key="*this"
+        class="btn-tag {{positionFilter === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
+        data-val="{{item}}"
+        bindtap="onPositionFilter"
+      >{{POSITION_LABELS[item]}}</view>
+    </view>
+    <view class="tags tags-row">
+      <view
+        class="btn-tag {{!actionFilter ? 'btn-tag-active' : 'btn-tag-outline'}}"
+        data-val=""
+        bindtap="onActionFilter"
+      >全部动作</view>
+      <view
+        wx:for="{{ACTION_OPTIONS}}"
+        wx:key="*this"
+        class="btn-tag {{actionFilter === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
+        data-val="{{item}}"
+        bindtap="onActionFilter"
+      >{{ACTION_LABELS[item]}}</view>
+    </view>
+  </view>
+
+  <view class="count">共 {{techniques.length}} 个招式</view>
+
+  <view class="list">
+    <block wx:for="{{grouped}}" wx:key="key">
+      <view class="group" wx:if="{{item.type !== 'flat'}}">
+        <text class="group-title">{{item.label}}</text>
+        <view
+          wx:for="{{item.items}}"
+          wx:for-item="tech"
+          wx:key="id"
+          class="card tech-item"
+          data-id="{{tech.classId}}"
+          bindtap="onTechTap"
+        >
+          <view class="tech-date">{{tech.dateText}}</view>
+          <view class="tech-header">
+            <text class="tech-name">{{tech.name}}</text>
+            <text class="tech-tags">
+              {{tech.tags.position ? POSITION_LABELS[tech.tags.position] : ''}}
+              {{tech.tags.action ? ' · ' + ACTION_LABELS[tech.tags.action] : ''}}
+            </text>
+          </view>
+          <view wx:if="{{tech.notes}}" class="tech-notes">{{tech.notes}}</view>
+        </view>
+      </view>
+      <block wx:elif="{{item.type === 'flat'}}">
+        <view
+          wx:for="{{item.items}}"
+          wx:for-item="tech"
+          wx:key="id"
+          class="card tech-item"
+          data-id="{{tech.classId}}"
+          bindtap="onTechTap"
+        >
+          <view class="tech-date">{{tech.dateText}}</view>
+          <view class="tech-header">
+            <text class="tech-name">{{tech.name}}</text>
+            <text class="tech-tags">
+              {{tech.tags.position ? POSITION_LABELS[tech.tags.position] : ''}}
+              {{tech.tags.action ? ' · ' + ACTION_LABELS[tech.tags.action] : ''}}
+            </text>
+          </view>
+          <view wx:if="{{tech.notes}}" class="tech-notes">{{tech.notes}}</view>
+        </view>
+      </block>
+    </block>
+  </view>
+
+  <view wx:if="{{techniques.length === 0}}" class="empty">暂无符合条件的招式记录</view>
+</view>

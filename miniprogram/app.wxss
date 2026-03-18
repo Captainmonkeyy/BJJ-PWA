@@ -1,0 +1,121 @@
+/**app.wxss - Premium minimalist design system**/
+
+page {
+  background-color: #FAFAF9;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-size: 28rpx;
+  color: #1C1917;
+  line-height: 1.5;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container {
+  padding: 40rpx 28rpx;
+  padding-bottom: 120rpx;
+}
+
+.card {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 28rpx;
+  margin-bottom: 28rpx;
+  border: 1rpx solid #E7E5E4;
+}
+
+.btn-primary {
+  background-color: #292524;
+  color: #FFFFFF;
+  border-radius: 12rpx;
+  padding: 20rpx 28rpx;
+  text-align: center;
+  font-weight: 500;
+}
+
+.btn-tag {
+  display: inline-block;
+  padding: 12rpx 20rpx;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  margin-right: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.btn-tag-active {
+  background-color: #292524;
+  color: #FFFFFF;
+}
+
+.btn-tag-outline {
+  background-color: #FAFAF9;
+  color: #57534E;
+  border: 1rpx solid #E7E5E4;
+}
+
+.icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.icon-add {
+  width: 32rpx;
+  height: 32rpx;
+  position: relative;
+}
+.icon-add::before,
+.icon-add::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+}
+.icon-add::before {
+  width: 2rpx;
+  height: 18rpx;
+  left: 15rpx;
+  top: 7rpx;
+}
+.icon-add::after {
+  width: 18rpx;
+  height: 2rpx;
+  left: 7rpx;
+  top: 15rpx;
+}
+
+.icon-chevron-right {
+  width: 24rpx;
+  height: 24rpx;
+  position: relative;
+}
+.icon-chevron-right::before {
+  content: '';
+  position: absolute;
+  width: 14rpx;
+  height: 14rpx;
+  border-right: 2rpx solid currentColor;
+  border-bottom: 2rpx solid currentColor;
+  transform: rotate(-45deg);
+  left: 4rpx;
+  top: 2rpx;
+}
+
+.icon-chevron-left {
+  width: 24rpx;
+  height: 24rpx;
+  position: relative;
+}
+.icon-chevron-left::before {
+  content: '';
+  position: absolute;
+  width: 14rpx;
+  height: 14rpx;
+  border-left: 2rpx solid currentColor;
+  border-bottom: 2rpx solid currentColor;
+  transform: rotate(45deg);
+  left: 6rpx;
+  top: 2rpx;
+}

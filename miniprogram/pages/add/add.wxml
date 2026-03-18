@@ -1,0 +1,55 @@
+<view class="container">
+  <view wx:if="{{!flowId}}" class="mode-tabs">
+    <view class="mode-tab {{recordMode === 'flow' ? 'active' : ''}}" data-mode="flow" bindtap="onModeSwitch">新建流程</view>
+    <view class="mode-tab {{recordMode === 'tech' ? 'active' : ''}}" data-mode="tech" bindtap="onModeSwitch">新建招式</view>
+  </view>
+
+  <!-- 流程入口 -->
+  <block wx:if="{{recordMode === 'flow'}}">
+    <view class="title">{{flowId ? '编辑流程' : '创建流程'}}</view>
+    <view class="card section flow-entry">
+      <view class="flow-entry-desc">在画布中勾选步骤与招式，通过分支串联成树状流程图</view>
+      <view class="btn-primary" bindtap="onEnterCanvas">{{flowId ? '编辑画布' : '进入画布'}}</view>
+    </view>
+  </block>
+
+  <!-- 招式表单 -->
+  <block wx:if="{{recordMode === 'tech'}}">
+    <view class="title">新建招式</view>
+    <view class="card section">
+      <view class="field">
+        <text class="label">招式名称 *</text>
+        <input class="input" placeholder="如：三角锁、十字固、扫技" value="{{techName}}" bindinput="onTechNameInput" />
+      </view>
+      <view class="field">
+        <text class="label">位置</text>
+        <view class="tags">
+          <view
+            wx:for="{{POSITION_OPTIONS}}"
+            wx:key="*this"
+            class="btn-tag {{techPosition === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
+            data-val="{{item}}"
+            bindtap="onTechPositionTap"
+          >{{POSITION_LABELS[item]}}</view>
+        </view>
+      </view>
+      <view class="field">
+        <text class="label">动作类型</text>
+        <view class="tags">
+          <view
+            wx:for="{{ACTION_OPTIONS}}"
+            wx:key="*this"
+            class="btn-tag {{techAction === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
+            data-val="{{item}}"
+            bindtap="onTechActionTap"
+          >{{ACTION_LABELS[item]}}</view>
+        </view>
+      </view>
+      <view class="field">
+        <text class="label">招式解说</text>
+        <textarea class="textarea" placeholder="记录招式要点、步骤、注意事项..." value="{{techNotes}}" bindinput="onTechNotesInput" />
+      </view>
+    </view>
+    <view class="btn-primary submit" bindtap="onSubmitTech">保存</view>
+  </block>
+</view>

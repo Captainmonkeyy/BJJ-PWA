@@ -1,0 +1,25 @@
+<view class="container" wx:if="{{tech}}">
+  <view class="back" bindtap="onBack">
+    <view class="icon icon-chevron-left"></view>
+    <text>返回</text>
+  </view>
+
+  <view class="card header-card">
+    <view class="header-row flex-between">
+      <view class="tech-name">{{tech.name}}</view>
+      <view class="btn-edit" bindtap="onEdit">编辑</view>
+    </view>
+    <view wx:if="{{tech.position || tech.action}}" class="tech-tags">
+      <text wx:if="{{tech.position}}">{{POSITION_LABELS[tech.position] || tech.position}}</text>
+      <text wx:if="{{tech.position && tech.action}}"> · </text>
+      <text wx:if="{{tech.action}}">{{ACTION_LABELS[tech.action] || tech.action}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{tech.notes}}" class="section">
+    <view class="section-title">招式解说</view>
+    <view class="notes-content">{{tech.notes}}</view>
+  </view>
+</view>
+
+<view wx:else class="loading">加载中...</view>

@@ -1,0 +1,211 @@
+<view class="container">
+  <view class="back" bindtap="onBack">
+    <view class="icon icon-chevron-left"></view>
+    <text>返回</text>
+  </view>
+
+  <view class="card section">
+    <view class="field">
+      <text class="label">流程名称</text>
+      <input class="input" placeholder="如：封闭防守 → 三角锁" value="{{flowName}}" bindinput="onFlowNameInput" />
+    </view>
+    <view class="field">
+      <text class="label">起始位置</text>
+      <view class="tags">
+        <view
+          wx:for="{{['top','bottom']}}"
+          wx:key="*this"
+          class="btn-tag {{startPosition === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
+          data-val="{{item}}"
+          bindtap="onStartPositionTap"
+        >{{item === 'top' ? '上位' : '下位'}}</view>
+      </view>
+    </view>
+    <view class="field" wx:if="{{startPosition === 'top'}}">
+      <text class="label">起始动作</text>
+      <view class="tags">
+        <view
+          wx:for="{{['sub','td','pass']}}"
+          wx:key="*this"
+          class="btn-tag {{startAction === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
+          data-val="{{item}}"
+          bindtap="onStartActionTap"
+        >{{item === 'sub' ? '降服' : (item === 'td' ? '抱摔' : '过腿')}}</view>
+      </view>
+    </view>
+    <view class="field" wx:if="{{startPosition === 'bottom'}}">
+      <text class="label">起始动作</text>
+      <view class="tags">
+        <view
+          wx:for="{{['closedGuard','halfGuard','openGuard','deepHalf']}}"
+          wx:key="*this"
+          class="btn-tag {{startAction === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
+          data-val="{{item}}"
+          bindtap="onStartActionTap"
+        >{{POSITION_LABELS[item]}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="card section">
+    <view class="section-header">
+      <text class="section-title">流程画布</text>
+      <view class="link link-with-icon" bindtap="onAddFirstNode">
+        <view class="icon icon-add"></view>
+        <text>{{rootId ? '添加节点' : '添加首个节点'}}</text>
+      </view>
+    </view>
+
+    <view class="canvas-area">
+      <block wx:if="{{treeRows.length === 0}}">
+        <view class="canvas-empty">
+          <text>点击「添加首个节点」开始构建流程</text>
+          <text class="hint">可添加步骤或从招式库选择，再通过分支串联成树状图</text>
+        </view>
+      </block>
+      <block wx:else>
+        <view class="tree-view">
+          <view
+            wx:for="{{treeRows}}"
+            wx:key="id"
+            class="tree-row depth-{{item.depth}}"
+            style="padding-left: {{item.depth * 40}}rpx;"
+          >
+            <view wx:if="{{item.edge && item.edge.branch}}" class="branch-label">
+              <text class="tree-connector">{{item.branchPrefix}}</text>
+              <text>若 {{item.edge.branch}}</text>
+            </view>
+            <view
+              class="node-card {{selectedNodeId === item.node.id ? 'selected' : ''}}"
+              data-id="{{item.node.id}}"
+              bindtap="onNodeTap"
+            >
+              <view class="node-content">
+                <text class="node-type">{{item.node.type === 'tech' ? '招式' : '步骤'}}</text>
+                <text class="node-label">{{item.label}}</text>
+              </view>
+              <view class="node-actions">
+                <text wx:if="{{item.canAddBranch}}" class="add-branch" catchtap="onAddBranch" data-id="{{item.node.id}}">+ 分支</text>
+                <text wx:else class="add-branch disabled">已达上限</text>
+                <text class="remove-node" catchtap="onRemoveNode" data-id="{{item.node.id}}">删除</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="card section">
+    <view class="section-header">
+      <text class="section-title">关键点（最多 3 条）</text>
+      <view wx:if="{{notes.length < 3}}" class="link" bindtap="onAddNote">添加</view>
+    </view>
+    <view wx:for="{{notes}}" wx:key="id" class="note-item">
+      <input class="input note-input" placeholder="关键点..." value="{{item.content}}" data-idx="{{index}}" bindinput="onNoteInput" />
+      <text class="remove" data-idx="{{index}}" bindtap="onRemoveNote">删除</text>
+    </view>
+  </view>
+
+  <view class="btn-primary submit" bindtap="onSubmit">保存</view>
+</view>
+
+<!-- 添加菜单 -->
+<view wx:if="{{showAddMenu}}" class="modal-mask" bindtap="onCancelAddMenu">
+  <view class="modal" catchtap="onModalTap">
+    <view class="modal-title">添加节点</view>
+    <view class="modal-actions-col">
+      <view class="btn-primary" bindtap="onAddStep">添加步骤</view>
+      <view class="btn-outline" bindtap="onAddTechFromLib">从招式库选择</view>
+    </view>
+    <view class="btn-outline" bindtap="onCancelAddMenu">取消</view>
+  </view>
+</view>
+
+<!-- 步骤表单 -->
+<view wx:if="{{showStepForm}}" class="modal-mask" bindtap="onCancelStep">
+  <view class="modal modal-form" catchtap="onModalTap">
+    <view class="modal-title">添加步骤</view>
+    <view class="field">
+      <text class="label">状态</text>
+      <view class="tags">
+        <view
+          wx:for="{{STEP_STATE_OPTIONS}}"
+          wx:key="*this"
+          class="btn-tag {{stepState === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
+          data-val="{{item}}"
+          bindtap="onStepStateTap"
+        >{{STEP_STATE_LABELS[item]}}</view>
+      </view>
+    </view>
+    <view class="field" wx:if="{{stepState}}">
+      <text class="label">位置</text>
+      <view class="tags">
+        <view
+          wx:for="{{STEP_POSITION_OPTIONS}}"
+          wx:key="*this"
+          class="btn-tag {{stepPosition === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
+          data-val="{{item}}"
+          bindtap="onStepPositionTap"
+        >{{POSITION_LABELS[item]}}</view>
+      </view>
+    </view>
+    <view class="field" wx:if="{{stepPosition}}">
+      <text class="label">动作类型</text>
+      <view class="tags">
+        <view
+          wx:for="{{STEP_ACTION_OPTIONS}}"
+          wx:key="*this"
+          class="btn-tag {{stepAction === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
+          data-val="{{item}}"
+          bindtap="onStepActionTap"
+        >{{ACTION_LABELS[item]}}</view>
+      </view>
+    </view>
+    <view class="modal-actions">
+      <view class="btn-outline" bindtap="onCancelStep">取消</view>
+      <view class="btn-primary" bindtap="onSaveStep">添加</view>
+    </view>
+  </view>
+</view>
+
+<!-- 分支表单 -->
+<view wx:if="{{showBranchForm}}" class="modal-mask" bindtap="onCancelBranch">
+  <view class="modal modal-form" catchtap="onModalTap">
+    <view class="modal-title">添加分支</view>
+    <view class="field">
+      <text class="label">触发条件</text>
+      <input class="input" placeholder="如：对手站起" value="{{branchTrigger}}" bindinput="onBranchTriggerInput" />
+    </view>
+    <view class="field">
+      <text class="label">下一节点</text>
+      <view class="modal-actions-col">
+        <view class="btn-primary" bindtap="onBranchThenStep">添加步骤</view>
+        <view class="btn-outline" bindtap="onBranchThenTech">从招式库选择</view>
+      </view>
+    </view>
+    <view class="modal-actions">
+      <view class="btn-outline" bindtap="onCancelBranch">取消</view>
+    </view>
+  </view>
+</view>
+
+<!-- 招式选择器 -->
+<view wx:if="{{showTechPicker}}" class="modal-mask" bindtap="onCancelStep">
+  <view class="modal modal-form" catchtap="onModalTap">
+    <view class="modal-title">从招式库选择</view>
+    <scroll-view scroll-y class="tech-list" wx:if="{{techniques.length > 0}}">
+      <view
+        wx:for="{{techniques}}"
+        wx:key="id"
+        class="tech-item"
+        data-id="{{item.id}}"
+        bindtap="onSelectTech"
+      >{{item.name}}</view>
+    </scroll-view>
+    <view wx:else class="empty-tip">暂无招式，请先添加招式</view>
+    <view class="modal-actions">
+      <view class="btn-outline" bindtap="onCancelStep">取消</view>
+    </view>
+  </view>
+</view>

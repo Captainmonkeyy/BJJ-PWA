@@ -1,0 +1,36 @@
+{
+  "lazyCodeLoading": "requiredComponents",
+  "pages": [
+    "pages/index/index",
+    "pages/add/add",
+    "pages/addTech/addTech",
+    "pages/flowEditor/flowEditor",
+    "pages/classDetail/classDetail",
+    "pages/techDetail/techDetail",
+    "pages/review/review"
+  ],
+  "window": {
+    "navigationBarTitleText": "柔术回声",
+    "navigationBarBackgroundColor": "#1C1917",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#FAFAF9"
+  },
+  "tabBar": {
+    "position": "top",
+    "color": "#A8A29E",
+    "selectedColor": "#1C1917",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/add/add",
+        "text": "新建"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}

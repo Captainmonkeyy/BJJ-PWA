@@ -1,0 +1,77 @@
+<view class="container">
+  <view class="header flex-between">
+    <text class="brand">柔术回声</text>
+    <view class="btn-primary btn-with-icon" bindtap="onAddTap">
+      <view class="icon icon-add"></view>
+      <text>新建</text>
+    </view>
+  </view>
+
+  <block wx:if="{{flows.length === 0 && techniques.length === 0}}">
+    <view class="empty">
+      <text>还没有任何记录</text>
+      <view class="link" bindtap="onAddTap">
+        <view class="icon icon-add"></view>
+        <text>开始记录</text>
+      </view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <!-- 流程列表 -->
+    <view class="section-block">
+      <view class="section-title">流程</view>
+      <block wx:if="{{flows.length === 0}}">
+        <view class="empty-small">暂无流程</view>
+      </block>
+      <block wx:else>
+        <view class="list">
+          <view
+            wx:for="{{flows}}"
+            wx:key="id"
+            class="card item"
+            data-id="{{item.id}}"
+            data-type="flow"
+            bindtap="onItemTap"
+          >
+            <view class="item-header flex-between">
+              <text class="item-name">{{item.name}}</text>
+              <view class="icon icon-chevron-right arrow"></view>
+            </view>
+            <text class="item-sub">起始：{{item.startText || '未设置'}}</text>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <!-- 招式列表 -->
+    <view class="section-block">
+      <view class="section-title">招式</view>
+      <block wx:if="{{techniques.length === 0}}">
+        <view class="empty-small">暂无招式</view>
+      </block>
+      <block wx:else>
+        <view class="list">
+          <view
+            wx:for="{{techniques}}"
+            wx:key="id"
+            class="card item"
+            data-id="{{item.id}}"
+            data-type="tech"
+            bindtap="onItemTap"
+          >
+            <view class="item-header flex-between">
+              <text class="item-name">{{item.name}}</text>
+              <view class="icon icon-chevron-right arrow"></view>
+            </view>
+            <text class="item-sub" wx:if="{{item.position || item.action}}">
+              {{item.position ? (POSITION_LABELS[item.position] || item.position) : ''}}
+              {{item.position && item.action ? ' · ' : ''}}
+              {{item.action ? (ACTION_LABELS[item.action] || item.action) : ''}}
+            </text>
+          </view>
+        </view>
+      </block>
+    </view>
+  </block>
+</view>

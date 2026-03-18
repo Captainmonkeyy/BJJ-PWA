@@ -1,0 +1,69 @@
+.title {
+  font-size: 36rpx;
+  font-weight: 600;
+  margin-bottom: 40rpx;
+  color: #1C1917;
+}
+
+.section {
+  margin-bottom: 28rpx;
+}
+
+.field {
+  margin-bottom: 28rpx;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  display: block;
+  font-size: 24rpx;
+  color: #57534E;
+  margin-bottom: 12rpx;
+}
+
+.input {
+  padding: 20rpx;
+  border: 1rpx solid #E7E5E4;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+}
+
+.textarea {
+  width: 100%;
+  padding: 20rpx;
+  border: 1rpx solid #E7E5E4;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  min-height: 160rpx;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.btn-tag {
+  display: inline-block;
+  padding: 12rpx 20rpx;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+}
+
+.btn-tag-active {
+  background-color: #292524;
+  color: #FFFFFF;
+}
+
+.btn-tag-outline {
+  background-color: #FAFAF9;
+  color: #57534E;
+  border: 1rpx solid #E7E5E4;
+}
+
+.submit {
+  margin-top: 56rpx;
+}

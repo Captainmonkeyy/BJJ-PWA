@@ -1,0 +1,40 @@
+<view class="container">
+  <view class="title">{{techId ? '编辑招式' : '新建招式'}}</view>
+
+  <view class="card section">
+    <view class="field">
+      <text class="label">招式名称 *</text>
+      <input class="input" placeholder="如：三角锁、十字固、扫技" value="{{techName}}" bindinput="onNameInput" />
+    </view>
+    <view class="field">
+      <text class="label">位置</text>
+      <view class="tags">
+        <view
+          wx:for="{{POSITION_OPTIONS}}"
+          wx:key="*this"
+          class="btn-tag {{techPosition === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
+          data-val="{{item}}"
+          bindtap="onPositionTap"
+        >{{POSITION_LABELS[item]}}</view>
+      </view>
+    </view>
+    <view class="field">
+      <text class="label">动作类型</text>
+      <view class="tags">
+        <view
+          wx:for="{{ACTION_OPTIONS}}"
+          wx:key="*this"
+          class="btn-tag {{techAction === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
+          data-val="{{item}}"
+          bindtap="onActionTap"
+        >{{ACTION_LABELS[item]}}</view>
+      </view>
+    </view>
+    <view class="field">
+      <text class="label">招式解说</text>
+      <textarea class="textarea" placeholder="记录招式要点、步骤、注意事项..." value="{{techNotes}}" bindinput="onNotesInput" />
+    </view>
+  </view>
+
+  <view class="btn-primary submit" bindtap="onSubmit">保存</view>
+</view>
