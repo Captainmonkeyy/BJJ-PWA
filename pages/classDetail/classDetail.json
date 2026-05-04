@@ -1,4 +1,5 @@
 {
   "navigationBarTitleText": "流程详情",
+  "enableShareTimeline": true,
   "usingComponents": {}
 }

@@ -5,6 +5,6 @@
   "description": "BJJ Echo - 巴西柔术训练日志微信小程序",
   "type": "module",
   "scripts": {
-    "icons": "node create-icons.js"
+    "icons": "node create-icons.cjs"
   }
 }

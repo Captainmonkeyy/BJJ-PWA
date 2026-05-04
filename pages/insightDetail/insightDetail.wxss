@@ -1,0 +1,100 @@
+.back {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  color: #57534E;
+  margin-bottom: 28rpx;
+  font-size: 28rpx;
+}
+
+.back .icon {
+  color: #57534E;
+}
+
+.header-card {
+  margin-bottom: 40rpx;
+}
+
+.header-row {
+  margin-bottom: 12rpx;
+}
+
+.insight-title {
+  flex: 1;
+  font-size: 40rpx;
+  font-weight: 600;
+  color: #1C1917;
+}
+
+.insight-date {
+  font-size: 28rpx;
+  color: #57534E;
+}
+
+.section {
+  margin-bottom: 40rpx;
+}
+
+.section-title {
+  font-weight: 500;
+  color: #1C1917;
+}
+
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.copy-btn {
+  font-size: 24rpx;
+  color: #78716C;
+}
+
+.body-content {
+  font-size: 28rpx;
+  color: #1C1917;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.selectable-text {
+  display: block;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.text-box {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.body-content {
+  font-size: 28rpx;
+  color: #1c1917;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.muted {
+  font-size: 28rpx;
+  color: #A8A29E;
+}
+
+.loading {
+  text-align: center;
+  padding: 72rpx;
+  color: #A8A29E;
+}
+
+.btn-edit {
+  font-size: 28rpx;
+  color: #292524;
+  font-weight: 500;
+}
+
+.header-row.flex-between {
+  align-items: flex-start;
+}

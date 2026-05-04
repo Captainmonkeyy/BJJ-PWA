@@ -1,77 +1,175 @@
 <view class="container">
-  <view class="header flex-between">
-    <text class="brand">柔术回声</text>
-    <view class="btn-primary btn-with-icon" bindtap="onAddTap">
-      <view class="icon icon-add"></view>
-      <text>新建</text>
+  <view class="header">
+    <text class="brand">Echo的柔术记录</text>
+  </view>
+
+  <view class="section-block">
+    <view class="card today-entry" bindtap="onTodayTrainingTap">
+      <view class="today-entry-inner flex-between">
+        <view class="today-entry-text">
+          <text class="today-entry-title">开始今日记录</text>
+          <text class="today-entry-desc">记录实战表现、新学招式或训练心得</text>
+        </view>
+        <view class="icon icon-chevron-right arrow"></view>
+      </view>
     </view>
   </view>
 
-  <block wx:if="{{flows.length === 0 && techniques.length === 0}}">
-    <view class="empty">
-      <text>还没有任何记录</text>
-      <view class="link" bindtap="onAddTap">
+  <view class="section-block">
+    <view class="section-title-row">
+      <text class="section-title">最近记录</text>
+      <text class="section-hint">长按可删除</text>
+    </view>
+
+    <block wx:if="{{recentItemsRaw.length === 0}}">
+      <view class="empty-small">还没有任何记录</view>
+      <view class="link link-center" bindtap="onTodayTrainingTap">
         <view class="icon icon-add"></view>
-        <text>开始记录</text>
+        <text>去新建</text>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="time-filter-block">
+        <view class="time-range-tabs">
+          <view
+            class="time-range-tab {{timeRangeTab === 'all' ? 'active' : ''}}"
+            data-tab="all"
+            bindtap="onTimeRangeTab"
+          >全部</view>
+          <view
+            class="time-range-tab {{timeRangeTab === 'week' ? 'active' : ''}}"
+            data-tab="week"
+            bindtap="onTimeRangeTab"
+          >本周</view>
+          <view
+            class="time-range-tab {{timeRangeTab === 'month' ? 'active' : ''}}"
+            data-tab="month"
+            bindtap="onTimeRangeTab"
+          >本月</view>
+          <view
+            class="time-range-tab {{timeRangeTab === 'custom' ? 'active' : ''}}"
+            data-tab="custom"
+            bindtap="onTimeRangeTab"
+          >自定义</view>
+        </view>
+        <view wx:if="{{timeRangeTab === 'custom'}}" class="index-custom-range">
+          <picker mode="date" value="{{customStartYmd}}" bindchange="onIndexCustomStartChange">
+            <view class="index-custom-pill">起 {{customStartYmd || '—'}}</view>
+          </picker>
+          <text class="index-custom-sep">~</text>
+          <picker mode="date" value="{{customEndYmd}}" bindchange="onIndexCustomEndChange">
+            <view class="index-custom-pill">止 {{customEndYmd || '—'}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="recent-toolbar">
+        <view class="filter-trigger {{filterActive ? 'filter-trigger-on' : ''}}" bindtap="onOpenFilter">
+          <view class="icon-funnel"></view>
+        </view>
+        <input
+          class="recent-search"
+          type="text"
+          placeholder="搜索记录（实战、招式、心得等）"
+          value="{{searchText}}"
+          confirm-type="search"
+          bindinput="onSearchInput"
+        />
+      </view>
+
+      <block wx:if="{{filteredRecent.length === 0}}">
+        <view class="empty-small">暂无符合筛选的记录</view>
+      </block>
+
+      <view wx:else class="list">
+        <view
+          wx:for="{{filteredRecent}}"
+          wx:key="uid"
+          class="card item"
+          data-id="{{item.id}}"
+          data-type="{{item.recordType}}"
+          data-name="{{item.name}}"
+          bindtap="onItemTap"
+          bindlongpress="onItemLongPress"
+        >
+          <view class="item-header flex-between">
+            <view class="item-title-row">
+              <text
+                class="item-badge {{item.recordType === 'flow' ? 'badge-flow' : item.recordType === 'session' ? 'badge-session' : item.recordType === 'insight' ? 'badge-insight' : 'badge-tech'}}"
+              >{{item.recordType === 'flow' ? '流程' : item.recordType === 'session' ? '实战' : item.recordType === 'insight' ? '心得' : '招式'}}</text>
+              <text wx:if="{{item.recordType === 'session' && item.sessionDateDisplay}}" class="item-session-date">{{item.sessionDateDisplay}}</text>
+              <text wx:if="{{item.recordType !== 'session'}}" class="item-name">{{item.name}}</text>
+            </view>
+            <view class="icon icon-chevron-right arrow"></view>
+          </view>
+          <text class="item-sub">{{item.subText}}</text>
+          <view wx:if="{{item.recordType === 'tech' && item.techNotes}}" class="item-tech-notes">{{item.techNotes}}</view>
+          <view wx:if="{{item.recordType === 'session' && item.sessionPreview}}" class="item-tech-notes">{{item.sessionPreview}}</view>
+          <view wx:if="{{item.recordType === 'insight' && item.insightPreview}}" class="item-tech-notes">{{item.insightPreview}}</view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view wx:if="{{showFilterPanel}}" class="filter-modal-mask" bindtap="onFilterMaskTap">
+    <view class="filter-sheet" catchtap="filterNoop">
+      <view class="filter-sheet-header flex-between">
+        <text class="filter-sheet-title">筛选记录</text>
+        <text class="filter-sheet-close" bindtap="onCloseFilter">关闭</text>
+      </view>
+      <view class="filter-sheet-body">
+        <text class="filter-group-label">类型</text>
+        <view class="tags">
+          <view
+            class="btn-tag {{draftKind === 'all' ? 'btn-tag-active' : 'btn-tag-outline'}}"
+            data-val="all"
+            bindtap="onDraftKindTap"
+          >全部</view>
+          <view
+            class="btn-tag {{draftKind === 'session' ? 'btn-tag-active' : 'btn-tag-outline'}}"
+            data-val="session"
+            bindtap="onDraftKindTap"
+          >实战</view>
+          <view
+            class="btn-tag {{draftKind === 'tech' ? 'btn-tag-active' : 'btn-tag-outline'}}"
+            data-val="tech"
+            bindtap="onDraftKindTap"
+          >招式</view>
+          <view
+            class="btn-tag {{draftKind === 'insight' ? 'btn-tag-active' : 'btn-tag-outline'}}"
+            data-val="insight"
+            bindtap="onDraftKindTap"
+          >心得</view>
+        </view>
+
+        <block wx:if="{{draftKind === 'tech'}}">
+          <text class="filter-group-label">招式 · 位置标签</text>
+          <view class="tags filter-tags-scroll">
+            <view
+              wx:for="{{positionFilterTags}}"
+              wx:key="key"
+              class="btn-tag {{(draftPosition === '' && item.key === '__all__') || (draftPosition !== '' && draftPosition === item.key) ? 'btn-tag-active' : 'btn-tag-outline'}}"
+              data-key="{{item.key}}"
+              bindtap="onDraftPositionTap"
+            >{{item.label}}</view>
+          </view>
+
+          <text class="filter-group-label">招式 · 动作标签</text>
+          <view class="tags filter-tags-scroll">
+            <view
+              wx:for="{{actionFilterTags}}"
+              wx:key="key"
+              class="btn-tag {{(draftAction === '' && item.key === '__all__') || (draftAction !== '' && draftAction === item.key) ? 'btn-tag-active' : 'btn-tag-outline'}}"
+              data-key="{{item.key}}"
+              bindtap="onDraftActionTap"
+            >{{item.label}}</view>
+          </view>
+        </block>
+      </view>
+      <view class="filter-sheet-footer">
+        <view class="btn-outline filter-footer-btn" bindtap="onResetFilter">重置</view>
+        <view class="btn-primary filter-footer-btn" bindtap="onApplyFilter">完成</view>
       </view>
     </view>
-  </block>
-
-  <block wx:else>
-    <!-- 流程列表 -->
-    <view class="section-block">
-      <view class="section-title">流程</view>
-      <block wx:if="{{flows.length === 0}}">
-        <view class="empty-small">暂无流程</view>
-      </block>
-      <block wx:else>
-        <view class="list">
-          <view
-            wx:for="{{flows}}"
-            wx:key="id"
-            class="card item"
-            data-id="{{item.id}}"
-            data-type="flow"
-            bindtap="onItemTap"
-          >
-            <view class="item-header flex-between">
-              <text class="item-name">{{item.name}}</text>
-              <view class="icon icon-chevron-right arrow"></view>
-            </view>
-            <text class="item-sub">起始：{{item.startText || '未设置'}}</text>
-          </view>
-        </view>
-      </block>
-    </view>
-
-    <!-- 招式列表 -->
-    <view class="section-block">
-      <view class="section-title">招式</view>
-      <block wx:if="{{techniques.length === 0}}">
-        <view class="empty-small">暂无招式</view>
-      </block>
-      <block wx:else>
-        <view class="list">
-          <view
-            wx:for="{{techniques}}"
-            wx:key="id"
-            class="card item"
-            data-id="{{item.id}}"
-            data-type="tech"
-            bindtap="onItemTap"
-          >
-            <view class="item-header flex-between">
-              <text class="item-name">{{item.name}}</text>
-              <view class="icon icon-chevron-right arrow"></view>
-            </view>
-            <text class="item-sub" wx:if="{{item.position || item.action}}">
-              {{item.position ? (POSITION_LABELS[item.position] || item.position) : ''}}
-              {{item.position && item.action ? ' · ' : ''}}
-              {{item.action ? (ACTION_LABELS[item.action] || item.action) : ''}}
-            </text>
-          </view>
-        </view>
-      </block>
-    </view>
-  </block>
+  </view>
 </view>

@@ -1,4 +1,5 @@
 {
   "navigationBarTitleText": "招式详情",
+  "enableShareTimeline": true,
   "usingComponents": {}
 }

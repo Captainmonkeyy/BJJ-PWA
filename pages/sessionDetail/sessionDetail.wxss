@@ -1,0 +1,104 @@
+.back {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  color: #57534e;
+  margin-bottom: 28rpx;
+  font-size: 28rpx;
+}
+
+.back .icon {
+  color: #57534e;
+}
+
+.header-card {
+  margin-bottom: 40rpx;
+}
+
+.header-row {
+  margin-bottom: 12rpx;
+}
+
+.session-title {
+  flex: 1;
+  font-size: 40rpx;
+  font-weight: 600;
+  color: #1c1917;
+}
+
+.session-date {
+  font-size: 28rpx;
+  color: #57534e;
+}
+
+.pain-text-extra {
+  margin-top: 12rpx;
+}
+
+.section {
+  margin-bottom: 40rpx;
+}
+
+.section-title {
+  font-weight: 500;
+  color: #1c1917;
+}
+
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.copy-btn {
+  font-size: 24rpx;
+  color: #78716c;
+}
+
+.body-content {
+  font-size: 28rpx;
+  color: #1c1917;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.selectable-text {
+  display: block;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.text-box {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.body-content {
+  font-size: 28rpx;
+  color: #1c1917;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.muted {
+  font-size: 28rpx;
+  color: #a8a29e;
+}
+
+.loading {
+  text-align: center;
+  padding: 72rpx;
+  color: #a8a29e;
+}
+
+.btn-edit {
+  font-size: 28rpx;
+  color: #292524;
+  font-weight: 500;
+}
+
+.header-row.flex-between {
+  align-items: flex-start;
+}

@@ -1,7 +1,16 @@
 {
   "description": "BJJ 训练日志 - 微信小程序",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "type": "file",
+        "value": "create-icons.cjs"
+      },
+      {
+        "type": "folder",
+        "value": "node_modules"
+      }
+    ],
     "include": []
   },
   "setting": {
@@ -35,5 +44,6 @@
   "miniprogramRoot": "./",
   "condition": {},
   "simulatorPluginLibVersion": {},
-  "editorSetting": {}
+  "editorSetting": {},
+  "libVersion": "3.14.3"
 }

@@ -39,10 +39,41 @@ Page({
     ACTION_LABELS,
     STEP_POSITION_OPTIONS,
     STEP_ACTION_OPTIONS,
+    recordDate: '',
+    todayStr: '',
   },
 
   onBack() {
     wx.navigateBack()
+  },
+
+  onShareAppMessage() {
+    const { flowId, flowName } = this.data
+    if (flowId) {
+      const name = (flowName || '').trim() || '流程'
+      return {
+        title: name.length > 28 ? `${name.slice(0, 28)}…` : `流程：${name}`,
+        path: `/pages/classDetail/classDetail?id=${flowId}`,
+      }
+    }
+    return {
+      title: 'Echo的柔术记录 · 流程图',
+      path: '/pages/flowEditor/flowEditor',
+    }
+  },
+
+  onShareTimeline() {
+    const { flowId, flowName } = this.data
+    if (flowId) {
+      const name = (flowName || '').trim() || '流程'
+      return {
+        title: name.length > 28 ? `${name.slice(0, 28)}…` : `流程：${name}`,
+        query: `id=${flowId}`,
+      }
+    }
+    return {
+      title: 'Echo的柔术记录 · 流程图',
+    }
   },
 
   onModalTap() {
@@ -54,6 +85,7 @@ Page({
   },
 
   onLoad(options) {
+    const todayStr = util.todayYMD()
     const flowId = options.id || ''
     if (flowId) {
       const flow = storage.getFlowById(flowId)
@@ -67,14 +99,21 @@ Page({
         flowName: draft.flowName || '',
         startPosition: draft.startPosition || '',
         startAction: draft.startAction || '',
+        recordDate: draft.recordDate || '',
         nodes: [],
         edges: [],
         rootId: '',
         notes: [],
+        todayStr,
       })
       getApp().globalData.draftFlow = null
     }
+    this.setData({ todayStr })
     this.loadTechniques()
+  },
+
+  onRecordDateChange(e) {
+    this.setData({ recordDate: e.detail.value })
   },
 
   loadFlow(flow) {
@@ -111,6 +150,7 @@ Page({
       flowName: flow.name || '',
       startPosition,
       startAction,
+      recordDate: flow.recordDate || util.ymdFromTimestamp(flow.updatedAt || flow.createdAt),
       nodes,
       edges,
       rootId,
@@ -348,6 +388,10 @@ Page({
     })
   },
 
+  onCancelTechPicker() {
+    this.setData({ showTechPicker: false })
+  },
+
   onRemoveNode(e) {
     const nodeId = e.currentTarget.dataset.id
     const { nodes, edges, rootId } = this.data
@@ -405,17 +449,19 @@ Page({
     }
     const id = flowId || util.generateId()
     const now = Date.now()
+    const existingFlow = flowId ? storage.getFlowById(flowId) : null
     const flow = {
       id,
       name: flowName.trim(),
       startPosition,
       startAction,
+      recordDate: util.resolveRecordDateOnSave(this.data.recordDate, existingFlow),
       nodes,
       edges,
       rootId,
       notes: notes.filter(n => n.content && n.content.trim()),
       tags: [],
-      createdAt: flowId ? (storage.getFlowById(flowId)?.createdAt || now) : now,
+      createdAt: flowId ? (existingFlow?.createdAt || now) : now,
       updatedAt: now,
     }
     storage.saveFlow(flow)

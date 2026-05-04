@@ -100,6 +100,11 @@
   color: #1C1917;
 }
 
+.selectable-text {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 .empty-detail {
   text-align: center;
   padding: 48rpx;
@@ -154,4 +159,190 @@
   text-align: center;
   padding: 72rpx;
   color: #A8A29E;
+}
+
+.rich-flow {
+  font-size: 30rpx;
+  line-height: 1.75;
+  color: #1C1917;
+  word-break: break-word;
+}
+
+.rich-text {
+  display: inline;
+  vertical-align: baseline;
+}
+
+.tech-inline-pill {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  vertical-align: middle;
+  margin: 4rpx 6rpx;
+  padding: 6rpx 18rpx 6rpx 14rpx;
+  background: #EDE9FE;
+  border-radius: 999rpx;
+  border: 1rpx solid #DDD6FE;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.tech-pill-dots {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5rpx;
+  margin-right: 10rpx;
+  flex-shrink: 0;
+}
+
+.tech-pill-dot {
+  width: 7rpx;
+  height: 7rpx;
+  border-radius: 50%;
+  background: #6D28D9;
+}
+
+.tech-inline-name {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #5B21B6;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 360rpx;
+}
+
+.rich-hint {
+  display: block;
+  font-size: 22rpx;
+  color: #A8A29E;
+  margin-top: 20rpx;
+}
+
+.tech-popover-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.22);
+  z-index: 1000;
+}
+
+.tech-popover-float {
+  position: fixed;
+  z-index: 1001;
+  width: 520rpx;
+  max-width: 88vw;
+  box-sizing: border-box;
+}
+
+.tech-popover-inner {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 24rpx 22rpx;
+  border: 1rpx solid #E7E5E4;
+  box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.14);
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.tech-popover-head {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16rpx;
+}
+
+.tech-popover-icon-badge {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 12rpx;
+  background: linear-gradient(145deg, #34D399, #059669);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 4rpx;
+  flex-shrink: 0;
+}
+
+.tech-popover-icon-dot {
+  width: 6rpx;
+  height: 6rpx;
+  border-radius: 50%;
+  background: #FFFFFF;
+}
+
+.tech-popover-head-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.tech-popover-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1C1917;
+  line-height: 1.35;
+}
+
+.tech-popover-sub {
+  display: block;
+  font-size: 24rpx;
+  color: #78716C;
+  margin-top: 8rpx;
+  line-height: 1.4;
+}
+
+.tech-popover-body {
+  display: block;
+  font-size: 26rpx;
+  color: #44403C;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  margin-top: 20rpx;
+}
+
+.tech-popover-explain {
+  margin-top: 20rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #F5F5F4;
+}
+
+.tech-popover-explain-label {
+  display: block;
+  font-size: 24rpx;
+  color: #A8A29E;
+  margin-bottom: 10rpx;
+}
+
+.tech-popover-explain-body {
+  display: block;
+  font-size: 28rpx;
+  line-height: 1.55;
+  color: #78716C;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.tech-popover-explain-empty {
+  display: block;
+  font-size: 26rpx;
+  line-height: 1.5;
+  color: #D6D3D1;
+}
+
+.tech-popover-missing {
+  color: #78716C;
+}
+
+.tech-popover-tip {
+  display: block;
+  margin-top: 20rpx;
+  font-size: 22rpx;
+  color: #A8A29E;
+  text-align: center;
 }

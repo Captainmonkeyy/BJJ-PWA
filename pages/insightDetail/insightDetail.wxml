@@ -1,0 +1,26 @@
+<view class="container" wx:if="{{insight}}">
+  <view class="back" bindtap="onBack">
+    <view class="icon icon-chevron-left"></view>
+    <text>返回</text>
+  </view>
+
+  <view class="card header-card">
+    <view class="header-row flex-between">
+      <view class="insight-title">{{insight.title}}</view>
+      <view class="btn-edit" bindtap="onEdit">编辑</view>
+    </view>
+    <text class="insight-date">{{dateLine}}</text>
+  </view>
+
+  <view wx:if="{{insight.body}}" class="section">
+    <view class="section-title-row">
+      <view class="section-title">正文</view>
+    </view>
+    <view class="text-box">
+      <text class="body-content" selectable="true">{{insight.body}}</text>
+    </view>
+  </view>
+  <view wx:else class="section muted">暂无正文</view>
+</view>
+
+<view wx:else class="loading">加载中...</view>

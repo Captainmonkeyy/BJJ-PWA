@@ -1,0 +1,323 @@
+<view class="container">
+  <view class="main-tabs">
+    <view class="main-tab {{mainTab === 'history' ? 'active' : ''}}" data-tab="history" bindtap="onMainTab">历史</view>
+    <view class="main-tab {{mainTab === 'stats' ? 'active' : ''}}" data-tab="stats" bindtap="onMainTab">统计</view>
+  </view>
+
+  <block wx:if="{{mainTab === 'history'}}">
+    <view class="card cal-card">
+      <view class="cal-nav flex-between">
+        <view class="cal-nav-btn" bindtap="onPrevMonth">‹</view>
+        <text class="cal-title">{{calendarTitle}}</text>
+        <view class="cal-nav-btn" bindtap="onNextMonth">›</view>
+      </view>
+      <view class="cal-weekday-row">
+        <text class="cal-weekday" wx:for="{{WEEK_HEADERS}}" wx:key="*this">{{item}}</text>
+      </view>
+      <view class="cal-week" wx:for="{{calendarWeeks}}" wx:for-item="week" wx:for-index="wi" wx:key="wi">
+        <view class="cal-row">
+          <view
+            wx:for="{{week.days}}"
+            wx:for-item="cell"
+            wx:for-index="di"
+            wx:key="di"
+            class="cal-cell-wrap"
+          >
+            <view
+              wx:if="{{cell.type === 'day'}}"
+              class="cal-day {{cell.isToday ? 'cal-today' : ''}} {{cell.isSelected ? 'cal-selected' : ''}}"
+              data-ymd="{{cell.ymd}}"
+              bindtap="onDayTap"
+            >
+              <text class="cal-day-num">{{cell.day}}</text>
+              <view class="cal-chips" wx:if="{{cell.summaryChips.length > 0}}">
+                <view
+                  wx:for="{{cell.summaryChips}}"
+                  wx:for-item="ch"
+                  wx:for-index="ci"
+                  wx:key="ci"
+                  class="cal-chip cal-chip-{{ch.kind}}"
+                >{{ch.text}}</view>
+              </view>
+            </view>
+            <view wx:else class="cal-day cal-day-pad"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <text class="hint-text">日期下方为当日概要；点击日期查看完整记录（只读）</text>
+  </block>
+
+  <block wx:if="{{mainTab === 'stats'}}">
+    <view class="stats-range-tabs">
+      <view class="stats-tab {{statsTab === 'week' ? 'active' : ''}}" data-tab="week" bindtap="onStatsTab">本周</view>
+      <view class="stats-tab {{statsTab === 'month' ? 'active' : ''}}" data-tab="month" bindtap="onStatsTab">本月</view>
+      <view class="stats-tab {{statsTab === 'year' ? 'active' : ''}}" data-tab="year" bindtap="onStatsTab">今年</view>
+      <view class="stats-tab {{statsTab === 'custom' ? 'active' : ''}}" data-tab="custom" bindtap="onStatsTab">自定义</view>
+    </view>
+    <view wx:if="{{statsTab === 'custom'}}" class="custom-range-row">
+      <picker mode="date" value="{{customStartYmd}}" bindchange="onCustomStartChange">
+        <view class="custom-date-pill">起 {{customStartYmd || '—'}}</view>
+      </picker>
+      <text class="custom-range-sep">~</text>
+      <picker mode="date" value="{{customEndYmd}}" bindchange="onCustomEndChange">
+        <view class="custom-date-pill">止 {{customEndYmd || '—'}}</view>
+      </picker>
+    </view>
+    <text class="range-label">{{statsRangeLabel}}</text>
+
+    <view class="card summary-card">
+      <view class="summary-title">训练概况</view>
+      <view class="summary-grid summary-grid-four">
+        <view class="summary-item summary-pos-tl">
+          <text class="summary-val">{{summaryClassDays}}</text>
+          <text class="summary-key">上课天数</text>
+        </view>
+        <view class="summary-item summary-pos-tr">
+          <text class="summary-val">{{summaryTech}}</text>
+          <text class="summary-key">招式</text>
+        </view>
+        <view class="summary-item summary-pos-bl">
+          <text class="summary-val">{{summaryInsight}}</text>
+          <text class="summary-key">心得</text>
+        </view>
+        <view class="summary-item summary-pos-br">
+          <text class="summary-val">{{summaryRecordDays}}</text>
+          <text class="summary-key">有记录天数</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="tag-overview-split">
+      <view class="tag-overview-col">
+        <text class="tag-overview-col-title">位置标签概览</text>
+        <view class="card tag-overview-card">
+          <view wx:if="{{positionTagRows.length === 0}}" class="tag-overview-empty">暂无招式</view>
+          <view
+            wx:for="{{positionTagRows}}"
+            wx:for-item="row"
+            wx:for-index="pi"
+            wx:key="key"
+            class="tag-stat-block"
+          >
+            <view class="tag-stat-head flex-between" data-kind="pos" data-idx="{{pi}}" bindtap="onTagRowToggle">
+              <text class="tag-stat-label">{{row.label}}</text>
+              <text class="tag-stat-meta">{{row.count}} 条 · {{row.open ? '收起' : '明细'}}</text>
+            </view>
+            <view wx:if="{{row.open}}" class="tag-stat-names">
+              <text wx:for="{{row.names}}" wx:for-item="nm" wx:for-index="ni" wx:key="ni" class="tag-stat-name-line">· {{nm}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="tag-overview-col">
+        <text class="tag-overview-col-title">动作标签概览</text>
+        <view class="card tag-overview-card">
+          <view wx:if="{{actionTagRows.length === 0}}" class="tag-overview-empty">暂无招式</view>
+          <view
+            wx:for="{{actionTagRows}}"
+            wx:for-item="row"
+            wx:for-index="ai"
+            wx:key="key"
+            class="tag-stat-block"
+          >
+            <view class="tag-stat-head flex-between" data-kind="act" data-idx="{{ai}}" bindtap="onTagRowToggle">
+              <text class="tag-stat-label">{{row.label}}</text>
+              <text class="tag-stat-meta">{{row.count}} 条 · {{row.open ? '收起' : '明细'}}</text>
+            </view>
+            <view wx:if="{{row.open}}" class="tag-stat-names">
+              <text wx:for="{{row.names}}" wx:for-item="nm" wx:for-index="ni" wx:key="ni" class="tag-stat-name-line">· {{nm}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-title">训练数据转文档</view>
+    <view class="card export-card export-txt-card">
+      <text class="export-desc">将训练数据转为txt导出</text>
+      <button class="export-btn export-txt-btn" bindtap="onExportTxtTap" hover-class="export-btn-hover">
+        <view class="export-txt-btn-inner">
+          <view class="export-txt-ico"></view>
+          <text>导出TXT并分享</text>
+        </view>
+      </button>
+    </view>
+
+    <view class="section-title">数据备份</view>
+    <view class="card export-card">
+      <text class="export-desc">当前您的记录保存在您的手机本地，如您希望更换手机后也能看到记录，请导出JSON数据并分享给文件传输助手，在新手机上进入本页，点[从聊天文件恢复]并选择该 JSON 即可还原。</text>
+      <button class="export-btn" bindtap="onExportJsonTap" hover-class="export-btn-hover">导出 JSON 并分享</button>
+      <button class="export-btn export-btn-secondary" bindtap="onImportJsonTap" hover-class="export-btn-secondary-hover">从聊天文件恢复</button>
+      <text class="export-warning">从聊天文件恢复将会覆盖本机全部的本地数据，请谨慎操作。</text>
+    </view>
+  </block>
+
+  <view wx:if="{{showDayPanel}}" class="day-panel-mask" bindtap="onDayPanelMask">
+    <view class="day-panel" catchtap="panelNoop">
+      <view class="day-panel-head">
+        <view class="flex-between day-panel-head-row">
+          <text class="day-panel-title">{{selectedDateTitle}}</text>
+          <text class="day-panel-close" bindtap="onCloseDayPanel">关闭</text>
+        </view>
+        <text class="day-panel-sub">{{dayRecordSummary}}</text>
+        <text class="day-panel-readonly-hint">以下为只读预览，不可在此编辑</text>
+      </view>
+      <scroll-view scroll-y class="day-panel-scroll">
+        <view wx:if="{{dayRecords.length === 0}}" class="empty-day">当日无记录</view>
+        <view wx:for="{{dayRecords}}" wx:for-item="rec" wx:for-index="ri" wx:key="ri">
+          <view wx:if="{{rec.kind === 'flow'}}" class="readonly-card">
+            <view class="readonly-type">{{rec.flow.typeLabel}}</view>
+            <text class="readonly-name">{{rec.flow.name}}</text>
+            <text class="readonly-line">{{rec.flow.recordLine}}</text>
+            <text wx:if="{{rec.flow.startLine}}" class="readonly-line">{{rec.flow.startLine}}</text>
+
+            <view wx:if="{{rec.flow.bodyPreview}}" class="readonly-block">
+              <text class="readonly-block-title">流程记录</text>
+              <text class="readonly-notes">{{rec.flow.bodyPreview}}</text>
+            </view>
+
+            <view wx:if="{{rec.flow.hasTree}}" class="readonly-block">
+              <text class="readonly-block-title">流程树</text>
+              <view
+                wx:for="{{rec.flow.treeRows}}"
+                wx:for-item="row"
+                wx:key="id"
+                class="readonly-tree-row"
+                style="padding-left: {{row.depth * 28}}rpx;"
+              >
+                <view wx:if="{{row.branchText}}" class="readonly-branch">
+                  <text class="readonly-tree-prefix">{{row.branchPrefix}}</text>
+                  <text>{{row.branchText}}</text>
+                </view>
+                <view class="readonly-node">
+                  <text class="readonly-node-type">{{row.nodeType}}</text>
+                  <text class="readonly-node-label">{{row.label}}</text>
+                </view>
+              </view>
+            </view>
+
+            <view wx:if="{{rec.flow.hasSteps}}" class="readonly-block">
+              <text class="readonly-block-title">步骤</text>
+              <text wx:for="{{rec.flow.stepLines}}" wx:for-item="line" wx:for-index="si" wx:key="si" class="readonly-bullet-line">· {{line}}</text>
+            </view>
+
+            <view wx:if="{{rec.flow.hasDecisions}}" class="readonly-block">
+              <text class="readonly-block-title">分支</text>
+              <text wx:for="{{rec.flow.decisionLines}}" wx:for-item="line" wx:for-index="di" wx:key="di" class="readonly-bullet-line">· {{line}}</text>
+            </view>
+
+            <view wx:if="{{rec.flow.hasNotes}}" class="readonly-block">
+              <text class="readonly-block-title">关键点</text>
+              <text wx:for="{{rec.flow.noteLines}}" wx:for-item="line" wx:for-index="ni" wx:key="ni" class="readonly-bullet-line">· {{line}}</text>
+            </view>
+          </view>
+
+          <view wx:if="{{rec.kind === 'tech'}}" class="readonly-card">
+            <view class="readonly-type">{{rec.tech.typeLabel}}</view>
+            <text class="readonly-name">{{rec.tech.name}}</text>
+            <text class="readonly-line">{{rec.tech.recordLine}}</text>
+            <text wx:if="{{rec.tech.tagLine}}" class="readonly-line">{{rec.tech.tagLine}}</text>
+            <view wx:if="{{rec.tech.notes}}" class="readonly-block">
+              <text class="readonly-block-title">招式解说</text>
+              <text class="readonly-notes">{{rec.tech.notes}}</text>
+            </view>
+          </view>
+
+          <view wx:if="{{rec.kind === 'insight'}}" class="readonly-card">
+            <view class="readonly-type">{{rec.insight.typeLabel}}</view>
+            <text class="readonly-name">{{rec.insight.name}}</text>
+            <text class="readonly-line">{{rec.insight.recordLine}}</text>
+            <view wx:if="{{rec.insight.body}}" class="readonly-block">
+              <text class="readonly-block-title">正文</text>
+              <text class="readonly-notes">{{rec.insight.body}}</text>
+            </view>
+          </view>
+
+          <view wx:if="{{rec.kind === 'session'}}" class="readonly-card">
+            <view class="readonly-type readonly-type-session">{{rec.session.typeLabel}}</view>
+            <text class="readonly-name">{{rec.session.name}}</text>
+            <text class="readonly-line">{{rec.session.recordLine}}</text>
+            <text wx:if="{{rec.session.classStateLine}}" class="readonly-line">{{rec.session.classStateLine}}</text>
+            <text wx:if="{{rec.session.painTagsLine}}" class="readonly-line">{{rec.session.painTagsLine}}</text>
+            <view wx:if="{{rec.session.pain}}" class="readonly-block">
+              <text class="readonly-block-title">疼痛描述</text>
+              <text class="readonly-notes">{{rec.session.pain}}</text>
+            </view>
+            <view wx:if="{{rec.session.practice}}" class="readonly-block">
+              <text class="readonly-block-title">实战表现</text>
+              <text class="readonly-notes">{{rec.session.practice}}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <view wx:if="{{showImportPreviewPanel}}" class="import-preview-mask" bindtap="onImportPreviewMask">
+    <view class="import-preview-sheet" catchtap="importPreviewNoop">
+      <view class="import-preview-head flex-between">
+        <text class="import-preview-title">导入预览</text>
+        <text class="import-preview-close" bindtap="onCloseImportPreview">关闭</text>
+      </view>
+      <view class="import-preview-meta" wx:if="{{importPreviewMeta}}">
+        <text class="import-preview-meta-line">文件：{{importPreviewMeta.fileName}}</text>
+        <text wx:if="{{importPreviewMeta.exportedAtText}}" class="import-preview-meta-line import-preview-meta-sub">备份导出时间：{{importPreviewMeta.exportedAtText}}</text>
+      </view>
+      <text class="import-preview-lead">以下为备份与当前手机的差异。确认导入后将以备份为准；「将删除」中的记录可勾选保留，合并回本机（支持每类批量勾选）。</text>
+      <scroll-view scroll-y class="import-preview-scroll">
+        <view wx:if="{{importPreview && importPreview.identical}}" class="import-preview-identical">
+          <text>备份与当前手机中的数据完全一致，无需恢复。</text>
+        </view>
+        <block wx:elif="{{importPreview}}">
+          <view wx:for="{{importPreview.allSections}}" wx:for-item="sec" wx:for-index="si" wx:key="storageKey" class="import-preview-section">
+            <view class="import-preview-sec-head">
+              <text class="import-preview-sec-title">{{sec.title}}</text>
+              <text class="import-preview-sec-summary">{{sec.summaryLine}}</text>
+            </view>
+            <view wx:if="{{!sec.hasChanges}}" class="import-preview-quiet">与当前一致，无变化</view>
+            <block wx:else>
+              <view wx:if="{{sec.added.lines.length > 0}}" class="import-preview-group">
+                <text class="import-preview-tag import-preview-tag-add">将新增 {{sec.added.lines.length}} {{sec.unit}}</text>
+                <text wx:for="{{sec.added.lines}}" wx:for-item="ln" wx:for-index="ai" wx:key="ai" class="import-preview-line">· {{ln}}</text>
+                <text wx:if="{{sec.added.more > 0}}" class="import-preview-more">… 还有 {{sec.added.more}} {{sec.unit}}未列出</text>
+              </view>
+              <view wx:if="{{sec.removedRecords.length > 0}}" class="import-preview-group">
+                <view class="import-preview-keep-toolbar">
+                  <text class="import-preview-tag import-preview-tag-del">将删除 {{sec.removedRecords.length}} {{sec.unit}}</text>
+                  <view class="import-preview-keep-btns">
+                    <text class="import-preview-batch" data-storage-key="{{sec.storageKey}}" data-mode="all" catchtap="onBatchRemovedKeep">全部保留</text>
+                    <text class="import-preview-batch import-preview-batch-muted" data-storage-key="{{sec.storageKey}}" data-mode="none" catchtap="onBatchRemovedKeep">取消全选</text>
+                  </view>
+                </view>
+                <text class="import-preview-keep-hint">勾选后，该条仍保留在本机（与备份合并）。</text>
+                <view
+                  wx:for="{{sec.removedRecords}}"
+                  wx:for-item="rec"
+                  wx:for-index="rki"
+                  wx:key="id"
+                  class="import-preview-keep-row"
+                  data-storage-key="{{sec.storageKey}}"
+                  data-record-id="{{rec.id}}"
+                  catchtap="onToggleRemovedKeep"
+                >
+                  <view class="import-preview-cb {{rec.keep ? 'import-preview-cb-on' : ''}}"></view>
+                  <text class="import-preview-keep-label">{{rec.label}}</text>
+                </view>
+              </view>
+              <view wx:if="{{sec.modified.lines.length > 0}}" class="import-preview-group">
+                <text class="import-preview-tag import-preview-tag-mod">内容将被备份覆盖 {{sec.modified.lines.length}} {{sec.unit}}</text>
+                <text wx:for="{{sec.modified.lines}}" wx:for-item="ln" wx:for-index="mi" wx:key="mi" class="import-preview-line">· {{ln}}</text>
+                <text wx:if="{{sec.modified.more > 0}}" class="import-preview-more">… 还有 {{sec.modified.more}} {{sec.unit}}未列出</text>
+              </view>
+            </block>
+          </view>
+        </block>
+      </scroll-view>
+      <view class="import-preview-footer">
+        <button class="import-preview-btn import-preview-btn-cancel" bindtap="onCloseImportPreview">取消</button>
+        <button wx:if="{{importPreview && !importPreview.identical}}" class="import-preview-btn import-preview-btn-danger" bindtap="onConfirmImportAfterPreview">确认覆盖并恢复</button>
+      </view>
+    </view>
+  </view>
+</view>

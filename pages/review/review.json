@@ -1,4 +1,5 @@
 {
   "navigationBarTitleText": "复盘招式",
+  "enableShareTimeline": true,
   "usingComponents": {}
 }

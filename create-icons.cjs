@@ -1,8 +1,6 @@
-// 创建 tabBar 占位图标（首次使用或克隆后运行: node create-icons.js）
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// 创建 tabBar 占位图标（首次使用或克隆后运行: node create-icons.cjs 或 npm run icons）
+const fs = require('fs');
+const path = require('path');
 
 const dir = path.join(__dirname, 'images');
 if (!fs.existsSync(dir)) fs.mkdirSync(dir);

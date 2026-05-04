@@ -25,7 +25,7 @@
 ```bash
 npm run icons
 # 或
-node create-icons.js
+node create-icons.cjs
 ```
 
 可替换 `images/` 目录下的 PNG 文件以自定义图标：

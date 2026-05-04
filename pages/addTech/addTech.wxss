@@ -31,6 +31,21 @@
   font-size: 28rpx;
 }
 
+.field-hint {
+  display: block;
+  font-size: 22rpx;
+  color: #A8A29E;
+  margin-bottom: 12rpx;
+}
+
+.picker-row {
+  padding: 20rpx;
+  border: 1rpx solid #E7E5E4;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #1C1917;
+}
+
 .textarea {
   width: 100%;
   padding: 20rpx;
@@ -38,6 +53,14 @@
   border-radius: 12rpx;
   font-size: 28rpx;
   min-height: 160rpx;
+}
+
+.char-count {
+  display: block;
+  margin-top: 10rpx;
+  text-align: right;
+  font-size: 22rpx;
+  color: #A8A29E;
 }
 
 .tags {
@@ -66,4 +89,172 @@
 
 .submit {
   margin-top: 56rpx;
+}
+
+.btn-tag-add {
+  font-weight: 600;
+  color: #292524;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.teach-link-block {
+  margin-bottom: 20rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #f5f5f4;
+}
+
+.teach-link-block:last-of-type {
+  border-bottom: none;
+}
+
+.teach-link-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 12rpx;
+}
+
+.teach-link-title-input {
+  margin-bottom: 0;
+}
+
+.teach-link-remove {
+  flex-shrink: 0;
+  font-size: 26rpx;
+  color: #78716c;
+  padding: 8rpx 12rpx;
+}
+
+.link-add-teach {
+  margin-top: 12rpx;
+  font-size: 28rpx;
+  color: #292524;
+  font-weight: 500;
+}
+
+.dialog-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+}
+
+.dialog-box {
+  width: 100%;
+  max-width: 600rpx;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 36rpx 28rpx;
+  border: 1rpx solid #E7E5E4;
+}
+
+.dialog-title {
+  display: block;
+  font-weight: 600;
+  font-size: 30rpx;
+  margin-bottom: 24rpx;
+  color: #1C1917;
+}
+
+.dialog-input {
+  margin-bottom: 28rpx;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 20rpx;
+}
+
+.btn-outline {
+  flex: 1;
+  padding: 20rpx;
+  border: 1rpx solid #E7E5E4;
+  border-radius: 12rpx;
+  text-align: center;
+  color: #1C1917;
+  font-size: 28rpx;
+}
+
+.dialog-ok {
+  flex: 1;
+  padding: 20rpx;
+  font-size: 28rpx;
+}
+
+.field-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.expand-btn {
+  font-size: 24rpx;
+  color: #78716C;
+}
+
+.expand-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #FFFFFF;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+}
+
+.expand-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 32rpx;
+  border-bottom: 1rpx solid #E7E5E4;
+}
+
+.expand-close {
+  font-size: 36rpx;
+  color: #78716C;
+  width: 60rpx;
+}
+
+.expand-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1C1917;
+  flex: 1;
+  text-align: center;
+}
+
+.expand-done {
+  font-size: 28rpx;
+  color: #292524;
+  font-weight: 500;
+  width: 60rpx;
+  text-align: right;
+}
+
+.expand-textarea {
+  width: 100%;
+  height: calc(100vh - 120rpx);
+  padding: 32rpx;
+  font-size: 32rpx;
+  color: #1C1917;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: transparent;
+  border: none;
+  box-sizing: border-box;
 }

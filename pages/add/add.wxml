@@ -1,19 +1,79 @@
+<wxs src="./painTags.wxs" module="pain" />
 <view class="container">
-  <view wx:if="{{!flowId}}" class="mode-tabs">
-    <view class="mode-tab {{recordMode === 'flow' ? 'active' : ''}}" data-mode="flow" bindtap="onModeSwitch">新建流程</view>
+  <view wx:if="{{!sessionId && !insightId}}" class="mode-tabs mode-tabs-three">
+    <view class="mode-tab {{recordMode === 'session' ? 'active' : ''}}" data-mode="session" bindtap="onModeSwitch">实战表现</view>
     <view class="mode-tab {{recordMode === 'tech' ? 'active' : ''}}" data-mode="tech" bindtap="onModeSwitch">新建招式</view>
+    <view class="mode-tab {{recordMode === 'insight' ? 'active' : ''}}" data-mode="insight" bindtap="onModeSwitch">新建心得</view>
   </view>
 
-  <!-- 流程入口 -->
-  <block wx:if="{{recordMode === 'flow'}}">
-    <view class="title">{{flowId ? '编辑流程' : '创建流程'}}</view>
-    <view class="card section flow-entry">
-      <view class="flow-entry-desc">在画布中勾选步骤与招式，通过分支串联成树状流程图</view>
-      <view class="btn-primary" bindtap="onEnterCanvas">{{flowId ? '编辑画布' : '进入画布'}}</view>
+  <view class="card section record-date-section">
+    <view class="field">
+      <text class="label">{{recordMode === 'insight' ? '日期' : '训练日期'}}</text>
+      <text class="field-hint">未改动时按保存当日；可点选实际日期</text>
+      <picker mode="date" value="{{recordDate || todayStr}}" bindchange="onRecordDateChange">
+        <view class="picker-row">{{recordDate || todayStr}}</view>
+      </picker>
     </view>
+  </view>
+
+  <block wx:if="{{recordMode === 'session'}}">
+    <view class="title">{{sessionId ? '编辑实战表现' : '实战表现'}}</view>
+    <view class="card section">
+      <view class="field">
+        <text class="label">上课状态</text>
+        <view class="tags">
+          <view
+            wx:for="{{sessionClassStateOptionList}}"
+            wx:key="*this"
+            class="btn-tag {{sessionClassState === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
+            data-val="{{item}}"
+            bindtap="onSessionClassStateTap"
+          >{{SESSION_CLASS_STATE_LABELS[item] || item}}</view>
+          <view class="btn-tag btn-tag-add btn-tag-outline" bindtap="onAddSessionClassStateTagTap">＋</view>
+        </view>
+      </view>
+      <view class="field">
+        <text class="label">疼痛描述</text>
+        <view class="tags">
+          <view
+            wx:for="{{sessionPainTagOptionList}}"
+            wx:key="*this"
+            class="btn-tag {{pain.hasTag(sessionPainTags, item) ? 'btn-tag-active' : 'btn-tag-outline'}}"
+            data-val="{{item}}"
+            bindtap="onSessionPainTagTap"
+          >{{SESSION_PAIN_AREA_LABELS[item] || item}}</view>
+          <view class="btn-tag btn-tag-add btn-tag-outline" bindtap="onAddSessionPainTagTap">＋</view>
+        </view>
+        <text class="field-hint field-hint-pain">疼痛管理，来记录下不适部位和程度吧</text>
+        <textarea
+          class="textarea textarea-pain-detail"
+          placeholder="文字补充（选填）"
+          value="{{sessionPain}}"
+          bindinput="onSessionPainInput"
+        />
+      </view>
+      <view class="field" style="padding-bottom: {{keyboardHeight}}px;">
+        <view class="field-label-row">
+          <text class="label">实战表现</text>
+          <view class="expand-hint-row">
+            <text class="expand-hint">若要编辑文本可展开更加便捷</text>
+            <text class="expand-btn" bindtap="onExpandPractice">展开</text>
+          </view>
+        </view>
+        <textarea
+          class="textarea"
+          placeholder="记录你的课上表现，如实战进步了什么，失误了什么，以及学到了什么"
+          value="{{sessionPractice}}"
+          maxlength="3000"
+          bindinput="onSessionPracticeInput"
+          hold-keyboard="{{true}}"
+        />
+        <text class="char-count">{{sessionPractice.length}}/3000</text>
+      </view>
+    </view>
+    <view class="btn-primary submit" bindtap="onSubmitSession">保存</view>
   </block>
 
-  <!-- 招式表单 -->
   <block wx:if="{{recordMode === 'tech'}}">
     <view class="title">新建招式</view>
     <view class="card section">
@@ -25,31 +85,151 @@
         <text class="label">位置</text>
         <view class="tags">
           <view
-            wx:for="{{POSITION_OPTIONS}}"
+            wx:for="{{techPositionOptionList}}"
             wx:key="*this"
             class="btn-tag {{techPosition === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
             data-val="{{item}}"
             bindtap="onTechPositionTap"
-          >{{POSITION_LABELS[item]}}</view>
+          >{{TECH_POSITION_LABELS[item] || item}}</view>
+          <view class="btn-tag btn-tag-add btn-tag-outline" bindtap="onAddTechPositionTagTap">＋</view>
         </view>
       </view>
       <view class="field">
         <text class="label">动作类型</text>
         <view class="tags">
           <view
-            wx:for="{{ACTION_OPTIONS}}"
+            wx:for="{{techActionOptionList}}"
             wx:key="*this"
             class="btn-tag {{techAction === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
             data-val="{{item}}"
             bindtap="onTechActionTap"
-          >{{ACTION_LABELS[item]}}</view>
+          >{{ACTION_LABELS[item] || item}}</view>
+          <view class="btn-tag btn-tag-add btn-tag-outline" bindtap="onAddTechActionTagTap">＋</view>
         </view>
       </view>
+      <view class="field" style="padding-bottom: {{keyboardHeight}}px;">
+        <view class="field-label-row">
+          <text class="label">招式解说</text>
+          <view class="expand-hint-row">
+            <text class="expand-hint">若要编辑文本可展开更加便捷</text>
+            <text class="expand-btn" bindtap="onExpandTechNotes">展开</text>
+          </view>
+        </view>
+        <textarea
+          class="textarea"
+          placeholder="记录招式要点、步骤、注意事项..."
+          value="{{techNotes}}"
+          maxlength="3000"
+          bindinput="onTechNotesInput"
+          hold-keyboard="{{true}}"
+        />
+        <text class="char-count">{{techNotes.length}}/3000</text>
+      </view>
       <view class="field">
-        <text class="label">招式解说</text>
-        <textarea class="textarea" placeholder="记录招式要点、步骤、注意事项..." value="{{techNotes}}" bindinput="onTechNotesInput" />
+        <text class="label">教学视频链接</text>
+        <text class="field-hint">可添加多条；粘贴含链接的整段文案时，会自动提取链接与链接前的文字作为显示名称</text>
+        <view wx:for="{{teachVideoLinks}}" wx:key="_id" class="teach-link-block">
+          <view class="teach-link-row">
+            <input
+              class="input flex-1"
+              type="text"
+              placeholder="链接（可粘贴整段分享文案）"
+              value="{{item.url}}"
+              data-idx="{{index}}"
+              bindinput="onTeachLinkUrlInput"
+            />
+            <text wx:if="{{teachVideoLinks.length > 1}}" class="teach-link-remove" data-idx="{{index}}" catchtap="onRemoveTeachLinkRow">删除</text>
+          </view>
+          <input
+            class="input teach-link-title-input"
+            placeholder="链接显示名称（选填）"
+            value="{{item.title}}"
+            data-idx="{{index}}"
+            bindinput="onTeachLinkTitleInput"
+          />
+        </view>
+        <view class="link-add-teach" bindtap="onAddTeachLinkRow">＋ 添加链接</view>
       </view>
     </view>
     <view class="btn-primary submit" bindtap="onSubmitTech">保存</view>
   </block>
+
+  <block wx:if="{{recordMode === 'insight'}}">
+    <view class="title">{{insightId ? '编辑心得' : '新建心得'}}</view>
+    <view class="card section">
+      <view class="field">
+        <text class="label">标题 *</text>
+        <input class="input" value="{{insightTitle}}" bindinput="onInsightTitleInput" />
+      </view>
+      <view class="field" style="padding-bottom: {{keyboardHeight}}px;">
+        <view class="field-label-row">
+          <text class="label">正文</text>
+          <view class="expand-hint-row">
+            <text class="expand-hint">若要编辑文本可展开更加便捷</text>
+            <text class="expand-btn" bindtap="onExpandInsightBody">展开</text>
+          </view>
+        </view>
+        <textarea
+          class="textarea"
+          placeholder="心得体会"
+          value="{{insightBody}}"
+          maxlength="3000"
+          bindinput="onInsightBodyInput"
+          hold-keyboard="{{true}}"
+        />
+        <text class="char-count">{{insightBody.length}}/3000</text>
+      </view>
+    </view>
+    <view class="btn-primary submit" bindtap="onSubmitInsight">保存</view>
+  </block>
+
+  <view wx:if="{{tagDialogVisible}}" class="tag-dialog-mask" catchtouchmove="tagDialogNoop">
+    <view class="tag-dialog-box" catchtap="tagDialogNoop">
+      <text class="tag-dialog-title">{{
+        tagDialogKind === 'position'
+          ? '自定义位置标签'
+          : tagDialogKind === 'action'
+            ? '自定义动作标签'
+            : tagDialogKind === 'sessionClassState'
+              ? '自定义上课状态'
+              : tagDialogKind === 'sessionPainTag'
+                ? '自定义疼痛部位'
+                : '自定义标签'
+      }}</text>
+      <input
+        class="input tag-dialog-input"
+        focus="{{tagDialogVisible}}"
+        value="{{tagDialogValue}}"
+        bindinput="onTechTagDialogInput"
+        placeholder="输入标签名称"
+      />
+      <view class="tag-dialog-actions">
+        <view class="btn-outline" bindtap="onTechTagDialogCancel">取消</view>
+        <view class="btn-primary tag-dialog-ok" bindtap="onTechTagDialogConfirm">确定</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{recordSaveTipVisible}}" class="record-save-tip-mask" catchtouchmove="recordSaveTipNoop">
+    <view class="record-save-tip-box">
+      <text class="record-save-tip-text">保存成功，可在首页查询</text>
+    </view>
+  </view>
+
+  <!-- 展开编辑弹窗 -->
+  <view wx:if="{{showExpandModal}}" class="expand-modal">
+    <view class="expand-header">
+      <text class="expand-title">{{expandModalTitle}}</text>
+      <text class="expand-done" bindtap="onDoneExpand">完成</text>
+    </view>
+    <textarea
+      class="expand-textarea"
+      value="{{expandModalValue}}"
+      maxlength="-1"
+      adjust-position="{{false}}"
+      hold-keyboard="{{true}}"
+      show-confirm-bar="{{false}}"
+      bindinput="onExpandInput"
+    ></textarea>
+  </view>
 </view>

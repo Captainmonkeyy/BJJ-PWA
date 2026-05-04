@@ -7,34 +7,114 @@
       <input class="input" placeholder="如：三角锁、十字固、扫技" value="{{techName}}" bindinput="onNameInput" />
     </view>
     <view class="field">
+      <text class="label">训练日期</text>
+      <text class="field-hint">未改动时按保存当日；可点选实际训练日期</text>
+      <picker mode="date" value="{{recordDate || todayStr}}" bindchange="onRecordDateChange">
+        <view class="picker-row">{{recordDate || todayStr}}</view>
+      </picker>
+    </view>
+    <view class="field">
       <text class="label">位置</text>
       <view class="tags">
         <view
-          wx:for="{{POSITION_OPTIONS}}"
+          wx:for="{{techPositionOptionList}}"
           wx:key="*this"
           class="btn-tag {{techPosition === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
           data-val="{{item}}"
           bindtap="onPositionTap"
-        >{{POSITION_LABELS[item]}}</view>
+        >{{TECH_POSITION_LABELS[item] || item}}</view>
+        <view class="btn-tag btn-tag-add btn-tag-outline" bindtap="onAddPositionTagTap">＋</view>
       </view>
     </view>
     <view class="field">
       <text class="label">动作类型</text>
       <view class="tags">
         <view
-          wx:for="{{ACTION_OPTIONS}}"
+          wx:for="{{techActionOptionList}}"
           wx:key="*this"
           class="btn-tag {{techAction === item ? 'btn-tag-active' : 'btn-tag-outline'}}"
           data-val="{{item}}"
           bindtap="onActionTap"
-        >{{ACTION_LABELS[item]}}</view>
+        >{{ACTION_LABELS[item] || item}}</view>
+        <view class="btn-tag btn-tag-add btn-tag-outline" bindtap="onAddActionTagTap">＋</view>
       </view>
     </view>
+    <view class="field" style="padding-bottom: {{keyboardHeight}}px;">
+      <view class="field-label-row">
+        <text class="label">招式解说</text>
+        <text class="expand-btn" bindtap="onExpandNotes">展开</text>
+      </view>
+      <textarea
+        class="textarea"
+        placeholder="记录招式要点、步骤、注意事项..."
+        value="{{techNotes}}"
+        maxlength="3000"
+        bindinput="onNotesInput"
+        hold-keyboard="{{true}}"
+      />
+      <text class="char-count">{{techNotes.length}}/3000</text>
+    </view>
     <view class="field">
-      <text class="label">招式解说</text>
-      <textarea class="textarea" placeholder="记录招式要点、步骤、注意事项..." value="{{techNotes}}" bindinput="onNotesInput" />
+      <text class="label">教学视频链接</text>
+      <text class="field-hint">可添加多条；粘贴含链接的整段文案时，会自动提取链接与链接前的文字作为显示名称</text>
+      <view wx:for="{{teachVideoLinks}}" wx:key="_id" class="teach-link-block">
+        <view class="teach-link-row">
+          <input
+            class="input flex-1"
+            type="text"
+            placeholder="链接（可粘贴整段分享文案）"
+            value="{{item.url}}"
+            data-idx="{{index}}"
+            bindinput="onTeachLinkUrlInput"
+          />
+          <text wx:if="{{teachVideoLinks.length > 1}}" class="teach-link-remove" data-idx="{{index}}" catchtap="onRemoveTeachLinkRow">删除</text>
+        </view>
+        <input
+          class="input teach-link-title-input"
+          placeholder="链接显示名称（选填）"
+          value="{{item.title}}"
+          data-idx="{{index}}"
+          bindinput="onTeachLinkTitleInput"
+        />
+      </view>
+      <view class="link-add-teach" bindtap="onAddTeachLinkRow">＋ 添加链接</view>
     </view>
   </view>
 
   <view class="btn-primary submit" bindtap="onSubmit">保存</view>
+
+  <view wx:if="{{tagDialogVisible}}" class="dialog-mask" catchtouchmove="noop">
+    <view class="dialog-box" catchtap="noop">
+      <text class="dialog-title">{{tagDialogKind === 'position' ? '自定义位置标签' : '自定义动作标签'}}</text>
+      <input
+        class="input dialog-input"
+        focus="{{tagDialogVisible}}"
+        value="{{tagDialogValue}}"
+        bindinput="onTagDialogInput"
+        placeholder="输入标签名称"
+      />
+      <view class="dialog-actions">
+        <view class="btn-outline" bindtap="onTagDialogCancel">取消</view>
+        <view class="btn-primary dialog-ok" bindtap="onTagDialogConfirm">确定</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 展开编辑弹窗 -->
+  <view wx:if="{{showExpandModal}}" class="expand-modal">
+    <view class="expand-header">
+      <text class="expand-close" bindtap="onCancelExpand">✕</text>
+      <text class="expand-title">{{expandModalTitle}}</text>
+      <text class="expand-done" bindtap="onDoneExpand">完成</text>
+    </view>
+    <textarea
+      class="expand-textarea"
+      value="{{expandModalValue}}"
+      maxlength="-1"
+      adjust-position="{{false}}"
+      hold-keyboard="{{true}}"
+      show-confirm-bar="{{false}}"
+      bindinput="onExpandInput"
+    ></textarea>
+  </view>
 </view>

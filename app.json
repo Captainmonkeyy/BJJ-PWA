@@ -3,14 +3,18 @@
   "pages": [
     "pages/index/index",
     "pages/add/add",
+    "pages/history/history",
     "pages/addTech/addTech",
     "pages/flowEditor/flowEditor",
     "pages/classDetail/classDetail",
     "pages/techDetail/techDetail",
+    "pages/insightDetail/insightDetail",
+    "pages/sessionDetail/sessionDetail",
+    "pages/webview/webview",
     "pages/review/review"
   ],
   "window": {
-    "navigationBarTitleText": "柔术回声",
+    "navigationBarTitleText": "Echo的柔术记录",
     "navigationBarBackgroundColor": "#1C1917",
     "navigationBarTextStyle": "white",
     "backgroundColor": "#FAFAF9"
@@ -29,6 +33,10 @@
       {
         "pagePath": "pages/add/add",
         "text": "新建"
+      },
+      {
+        "pagePath": "pages/history/history",
+        "text": "历史"
       }
     ]
   },

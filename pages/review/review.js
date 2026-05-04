@@ -40,6 +40,19 @@ Page({
     this.filterTechniques()
   },
 
+  onShareAppMessage() {
+    return {
+      title: 'Echo的柔术记录 · 复习',
+      path: '/pages/review/review',
+    }
+  },
+
+  onShareTimeline() {
+    return {
+      title: 'Echo的柔术记录 · 复习',
+    }
+  },
+
   filterTechniques() {
     const classes = storage.getAll()
     let techs = flattenTechniques(classes)

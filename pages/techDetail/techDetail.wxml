@@ -10,15 +10,37 @@
       <view class="btn-edit" bindtap="onEdit">编辑</view>
     </view>
     <view wx:if="{{tech.position || tech.action}}" class="tech-tags">
-      <text wx:if="{{tech.position}}">{{POSITION_LABELS[tech.position] || tech.position}}</text>
+      <text wx:if="{{tech.position}}">{{TECH_POSITION_LABELS[tech.position] || POSITION_LABELS[tech.position] || tech.position}}</text>
       <text wx:if="{{tech.position && tech.action}}"> · </text>
       <text wx:if="{{tech.action}}">{{ACTION_LABELS[tech.action] || tech.action}}</text>
     </view>
   </view>
 
   <view wx:if="{{tech.notes}}" class="section">
-    <view class="section-title">招式解说</view>
-    <view class="notes-content">{{tech.notes}}</view>
+    <view class="section-title-row">
+      <view class="section-title">招式解说</view>
+    </view>
+    <view class="text-box">
+      <text class="notes-content" user-select="true" selectable="true">{{tech.notes}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{teachVideoRows.length}}" class="section">
+    <view class="section-title">教学视频</view>
+    <view
+      wx:for="{{teachVideoRows}}"
+      wx:key="index"
+      class="teach-video-row"
+      data-url="{{item.url}}"
+      bindtap="onOpenTeachVideo"
+    >
+      <text class="teach-video-icon">▶</text>
+      <view class="teach-video-text">
+        <text class="teach-video-label">{{item.displayLabel}}</text>
+        <text class="teach-video-url">{{item.url}}</text>
+      </view>
+      <text class="teach-video-chevron">›</text>
+    </view>
   </view>
 </view>
 

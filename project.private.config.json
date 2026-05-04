@@ -1,6 +1,6 @@
 {
   "libVersion": "3.14.3",
-  "projectname": "miniprogram",
+  "projectname": "bjj%20app",
   "condition": {},
   "setting": {
     "urlCheck": false,
@@ -16,7 +16,7 @@
     "showES6CompileOption": false,
     "compileHotReLoad": true,
     "checkInvalidKey": true,
-    "ignoreDevUnusedFiles": true,
+    "ignoreDevUnusedFiles": false,
     "bigPackageSizeSupport": false
   }
 }

@@ -1,4 +1,5 @@
 {
-  "navigationBarTitleText": "柔术回声",
+  "navigationBarTitleText": "柔术记录本",
+  "enableShareTimeline": true,
   "usingComponents": {}
 }

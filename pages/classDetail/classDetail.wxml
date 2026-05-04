@@ -6,13 +6,40 @@
 
   <view class="card header-card">
     <view class="header-row flex-between">
-      <view class="flow-name">{{flow.name}}</view>
+      <text class="flow-name selectable-text" selectable="true" user-select="true">{{flow.name}}</text>
       <view class="btn-edit" bindtap="onEdit">编辑</view>
     </view>
-    <view wx:if="{{flowStartText}}" class="flow-start">起始：{{flowStartText}}</view>
+    <text wx:if="{{flowStartText && !useSegments}}" class="flow-start selectable-text" selectable="true" user-select="true">起始：{{flowStartText}}</text>
   </view>
 
-  <view wx:if="{{treeRows.length > 0}}" class="section">
+  <view wx:if="{{useSegments}}" class="section">
+    <view class="section-title">流程记录</view>
+    <view class="rich-flow">
+      <block wx:for="{{displaySegments}}" wx:key="uid">
+        <text wx:if="{{item.type === 'text'}}" class="rich-text" user-select>{{item.text}}</text>
+        <view
+          wx:else
+          id="pill-{{item.uid}}"
+          class="tech-inline-pill"
+          data-uid="{{item.uid}}"
+          data-tid="{{item.techId}}"
+          data-name="{{item.name}}"
+          data-tag="{{item.tagLine}}"
+          bindtap="onTechLinkTap"
+        >
+          <view class="tech-pill-dots">
+            <view class="tech-pill-dot"></view>
+            <view class="tech-pill-dot"></view>
+            <view class="tech-pill-dot"></view>
+          </view>
+          <text class="tech-inline-name">{{item.name}}</text>
+        </view>
+      </block>
+    </view>
+    <text class="rich-hint">点击招式胶囊查看招式记录</text>
+  </view>
+
+  <view wx:if="{{!useSegments && treeRows.length > 0}}" class="section">
     <view class="section-title">【流程树】</view>
     <view class="tree-view">
       <view wx:for="{{treeRows}}" wx:key="id" class="tree-row" style="padding-left: {{item.depth * 40}}rpx;">
@@ -28,43 +55,72 @@
     </view>
   </view>
 
-  <view wx:elif="{{steps.length > 0}}" class="section">
+  <view wx:elif="{{!useSegments && steps.length > 0}}" class="section">
     <view class="section-title">【步骤】</view>
     <view class="step-list">
       <view wx:for="{{steps}}" wx:key="id" class="step-item">
         <text class="step-order">{{index + 1}}.</text>
-        <text class="step-text" wx:if="{{item.state}}">
+        <text class="step-text selectable-text" wx:if="{{item.state}}" selectable="true" user-select="true">
           {{STEP_STATE_LABELS[item.state] || item.state}}{{item.position ? ' · ' + (POSITION_LABELS[item.position] || item.position) : ''}}{{item.action ? ' · ' + (ACTION_LABELS[item.action] || item.action) : ''}}
         </text>
-        <text class="step-text" wx:else>
+        <text class="step-text selectable-text" wx:else selectable="true" user-select="true">
           {{item.position || ''}}{{item.position && item.move ? ' → ' : ''}}{{item.move || ''}}
         </text>
       </view>
     </view>
   </view>
 
-  <view wx:if="{{decisions.length > 0 && treeRows.length === 0}}" class="section">
+  <view wx:if="{{!useSegments && decisions.length > 0 && treeRows.length === 0}}" class="section">
     <view class="section-title">【分支】</view>
     <view class="decision-list">
       <view wx:for="{{decisions}}" wx:key="id" class="decision-item">
-        <text>若 {{item.trigger}}</text>
+        <text class="selectable-text" selectable="true" user-select="true">若 {{item.trigger}}</text>
       </view>
     </view>
   </view>
 
-  <view wx:if="{{notes.length > 0}}" class="section">
+  <view wx:if="{{!useSegments && notes.length > 0}}" class="section">
     <view class="section-title">【关键点】</view>
     <view class="note-list">
       <view wx:for="{{notes}}" wx:key="id" class="note-item">
         <text class="note-bullet">-</text>
-        <text class="note-content">{{item.content}}</text>
+        <text class="note-content selectable-text" selectable="true" user-select="true">{{item.content}}</text>
       </view>
     </view>
   </view>
 
-  <view wx:if="{{treeRows.length === 0 && steps.length === 0 && decisions.length === 0 && notes.length === 0}}" class="empty-detail">
+  <view wx:if="{{!useSegments && treeRows.length === 0 && steps.length === 0 && decisions.length === 0 && notes.length === 0}}" class="empty-detail">
     <text>暂无步骤、分支或关键点</text>
   </view>
 </view>
 
 <view wx:else class="loading">加载中...</view>
+
+<view wx:if="{{previewVisible}}" class="tech-popover-mask" bindtap="onClosePreviewMask"></view>
+<view
+  wx:if="{{previewVisible}}"
+  class="tech-popover-float"
+  style="left: {{popLeftPx}}px; top: {{popTopPx}}px;"
+  catchtap="previewCardNoop"
+>
+  <view class="tech-popover-inner">
+    <view class="tech-popover-head">
+      <view class="tech-popover-icon-badge">
+        <view class="tech-popover-icon-dot"></view>
+        <view class="tech-popover-icon-dot"></view>
+        <view class="tech-popover-icon-dot"></view>
+      </view>
+      <view class="tech-popover-head-text">
+        <text class="tech-popover-title">{{previewName}}</text>
+        <text wx:if="{{previewTagLine}}" class="tech-popover-sub">{{previewTagLine}}</text>
+      </view>
+    </view>
+    <text wx:if="{{previewMissing}}" class="tech-popover-body tech-popover-missing">{{previewMissingText}}</text>
+    <view wx:if="{{!previewMissing}}" class="tech-popover-explain">
+      <text class="tech-popover-explain-label">招式解说</text>
+      <text wx:if="{{previewExplainNotes}}" class="tech-popover-explain-body" user-select>{{previewExplainNotes}}</text>
+      <text wx:else class="tech-popover-explain-empty">暂无招式解说</text>
+    </view>
+    <text class="tech-popover-tip">点击空白处关闭</text>
+  </view>
+</view>

@@ -10,6 +10,13 @@
       <input class="input" placeholder="如：封闭防守 → 三角锁" value="{{flowName}}" bindinput="onFlowNameInput" />
     </view>
     <view class="field">
+      <text class="label">训练日期</text>
+      <text class="field-hint">未改动时按保存当日；可点选实际训练日期</text>
+      <picker mode="date" value="{{recordDate || todayStr}}" bindchange="onRecordDateChange">
+        <view class="picker-row">{{recordDate || todayStr}}</view>
+      </picker>
+    </view>
+    <view class="field">
       <text class="label">起始位置</text>
       <view class="tags">
         <view
@@ -191,7 +198,7 @@
 </view>
 
 <!-- 招式选择器 -->
-<view wx:if="{{showTechPicker}}" class="modal-mask" bindtap="onCancelStep">
+<view wx:if="{{showTechPicker}}" class="modal-mask" bindtap="onCancelTechPicker">
   <view class="modal modal-form" catchtap="onModalTap">
     <view class="modal-title">从招式库选择</view>
     <scroll-view scroll-y class="tech-list" wx:if="{{techniques.length > 0}}">
@@ -205,7 +212,7 @@
     </scroll-view>
     <view wx:else class="empty-tip">暂无招式，请先添加招式</view>
     <view class="modal-actions">
-      <view class="btn-outline" bindtap="onCancelStep">取消</view>
+      <view class="btn-outline" bindtap="onCancelTechPicker">取消</view>
     </view>
   </view>
 </view>

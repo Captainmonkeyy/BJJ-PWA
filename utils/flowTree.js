@@ -30,7 +30,7 @@ function canAddBranch(edges, rootId, nodeId) {
 function getNodeLabel(node, techMap = {}) {
   if (!node) return ''
   if (node.type === 'tech' && node.techId) {
-    const tech = techMap[node.techId]
+    const tech = techMap[node.techId] || techMap[String(node.techId)]
     return tech ? tech.name : '招式'
   }
   if (node.type === 'step' && node.step) {
@@ -47,7 +47,9 @@ function getNodeLabel(node, techMap = {}) {
 function buildTree(nodes, edges, rootId) {
   if (!nodes || !rootId) return []
   const nodeMap = {}
-  nodes.forEach(n => { nodeMap[n.id] = { ...n, children: [] } })
+  nodes.forEach(n => {
+    nodeMap[n.id] = Object.assign({}, n, { children: [] })
+  })
   edges.forEach(e => {
     const from = nodeMap[e.from]
     if (from) {
@@ -73,7 +75,7 @@ function flattenTree(tree, techMap, level = 0) {
       const branchPrefix = edge ? (isLastSibling ? '└─ ' : '├─ ') : ''
       const childPrefix = prefix + (isLastSibling ? '   ' : '│  ')
       result.push({
-        id: node?.id || `row-${depth}-${idx}`,
+        id: (node && node.id) || `row-${depth}-${idx}`,
         node,
         edge,
         label,

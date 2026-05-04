@@ -1,0 +1,13 @@
+<web-view wx:if="{{src && !showError}}" src="{{src}}" binderror="onWebViewError"></web-view>
+
+<view wx:if="{{showError}}" class="error-mask">
+  <view class="error-box">
+    <text class="error-icon">🔗</text>
+    <text class="error-title">无法在微信小程序中直接打开此链接</text>
+    <text class="error-desc">请点击下方按钮复制链接，再到微信聊天中打开</text>
+    <view class="error-btn" bindtap="onCopyLink">复制链接</view>
+    <view class="error-btn-cancel" bindtap="onGoBack">返回</view>
+  </view>
+</view>
+
+<view wx:if="{{!src}}" class="empty">无效或缺失的链接</view>

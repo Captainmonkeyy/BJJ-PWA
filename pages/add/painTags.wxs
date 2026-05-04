@@ -1,0 +1,10 @@
+function hasTag(tags, key) {
+  if (!tags || tags.length === 0) return false
+  var i = 0
+  for (i = 0; i < tags.length; i++) {
+    if (tags[i] === key) return true
+  }
+  return false
+}
+
+module.exports.hasTag = hasTag
